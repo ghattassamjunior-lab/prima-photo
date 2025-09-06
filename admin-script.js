@@ -5,8 +5,25 @@ const ADMIN_PASSWORD = 'admin123';
 let photos = JSON.parse(localStorage.getItem('portfolioPhotos')) || [];
 let currentSection = 'gallery';
 
+// Simple admin protection
+function checkAdminAccess() {
+    const password = localStorage.getItem('adminAccess');
+    if (password !== 'prima2024') {
+        const userPassword = prompt('Mot de passe administrateur:');
+        if (userPassword === 'prima2024') {
+            localStorage.setItem('adminAccess', 'prima2024');
+        } else {
+            alert('Accès refusé');
+            window.location.href = 'index.html';
+            return false;
+        }
+    }
+    return true;
+}
+
 // Initialisation
 document.addEventListener('DOMContentLoaded', async function() {
+    if (!checkAdminAccess()) return;
     await portfolioDB.init();
     initializeAdmin();
     loadStoredData();
