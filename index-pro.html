@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Photo Professionnel</title>
+    <link rel="stylesheet" href="styles-pro.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="images/logo.PNG" alt="Logo" class="logo-img">
+                <span class="logo-text">Studio Pro</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#apropos">À propos</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="https://wa.me/33123456789" class="btn-whatsapp" target="_blank">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="accueil" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Photographe Professionnel</h1>
+                <p class="hero-subtitle">Capturez l'essence de vos moments précieux</p>
+                <p class="hero-description">Spécialisé dans la photographie d'événements, portraits et corporate. Plus de 10 ans d'expérience au service de votre image.</p>
+                <div class="hero-buttons">
+                    <a href="#portfolio" class="btn-primary">Voir mon travail</a>
+                    <a href="#contact" class="btn-secondary">Me contacter</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-card">
+                    <img src="images/logo.PNG" alt="Photographe" class="hero-photo">
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Événements</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">10+</span>
+                            <span class="stat-label">Années</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Satisfaction</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Mes Services</h2>
+                <p>Des prestations sur mesure pour tous vos besoins photographiques</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Mariages</h3>
+                    <p>Immortalisez votre jour J avec des photos authentiques et émouvantes qui racontent votre histoire d'amour.</p>
+                    <ul class="service-features">
+                        <li>Reportage complet</li>
+                        <li>Photos de couple</li>
+                        <li>Galerie en ligne</li>
+                        <li>Retouches incluses</li>
+                    </ul>
+                    <div class="service-price">À partir de 800€</div>
+                    <a href="#contact" class="btn-service">Devis gratuit</a>
+                </div>
+                
+                <div class="service-card featured">
+                    <div class="service-badge">Populaire</div>
+                    <div class="service-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Corporate</h3>
+                    <p>Photos professionnelles pour entreprises, événements corporate et portraits d'équipe.</p>
+                    <ul class="service-features">
+                        <li>Photos d'équipe</li>
+                        <li>Événements corporate</li>
+                        <li>Portraits professionnels</li>
+                        <li>Livraison rapide</li>
+                    </ul>
+                    <div class="service-price">À partir de 400€</div>
+                    <a href="#contact" class="btn-service">Devis gratuit</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-birthday-cake"></i>
+                    </div>
+                    <h3>Événements</h3>
+                    <p>Anniversaires, baptêmes, communions et toutes vos célébrations privées.</p>
+                    <ul class="service-features">
+                        <li>Reportage événement</li>
+                        <li>Photos de groupe</li>
+                        <li>Moments spontanés</li>
+                        <li>Album souvenir</li>
+                    </ul>
+                    <div class="service-price">À partir de 300€</div>
+                    <a href="#contact" class="btn-service">Devis gratuit</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <div class="section-header">
+                <h2>Mon Portfolio</h2>
+                <p>Découvrez quelques-unes de mes réalisations</p>
+            </div>
+            <div class="portfolio-filters">
+                <button class="filter-btn active" data-filter="all">Tout</button>
+                <button class="filter-btn" data-filter="mariage">Mariages</button>
+                <button class="filter-btn" data-filter="corporate">Corporate</button>
+                <button class="filter-btn" data-filter="evenement">Événements</button>
+            </div>
+            <div class="portfolio-grid" id="portfolioGrid">
+                <!-- Les photos seront chargées dynamiquement -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="apropos" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>À propos de moi</h2>
+                    <p class="about-intro">Passionné de photographie depuis plus de 10 ans, je mets mon expertise au service de vos moments les plus précieux.</p>
+                    <p>Diplômé en arts visuels et fort d'une expérience riche auprès de clients variés, je sais m'adapter à vos besoins pour créer des images qui vous ressemblent.</p>
+                    <div class="about-skills">
+                        <div class="skill">
+                            <span class="skill-name">Photographie d'événements</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill">
+                            <span class="skill-name">Retouche photo</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill">
+                            <span class="skill-name">Portrait</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="images/logo.PNG" alt="Photographe" class="about-photo">
+                    <div class="about-badge">
+                        <i class="fas fa-camera"></i>
+                        <span>10+ ans d'expérience</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Contactez-moi</h2>
+                <p>Discutons de votre projet photographique</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h3>Téléphone</h3>
+                        <p>+33 1 23 45 67 89</p>
+                        <a href="tel:+33123456789" class="contact-link">Appeler maintenant</a>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <h3>WhatsApp</h3>
+                        <p>Réponse rapide garantie</p>
+                        <a href="https://wa.me/33123456789?text=Bonjour, je souhaite discuter d'un projet photo" class="contact-link" target="_blank">Envoyer un message</a>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Email</h3>
+                        <p>contact@studiopro.fr</p>
+                        <a href="mailto:contact@studiopro.fr" class="contact-link">Envoyer un email</a>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" id="email" name="email" placeholder="Votre email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="telephone" name="telephone" placeholder="Votre téléphone">
+                        </div>
+                        <div class="form-group">
+                            <select id="service" name="service" required>
+                                <option value="">Type de prestation</option>
+                                <option value="mariage">Mariage</option>
+                                <option value="corporate">Corporate</option>
+                                <option value="evenement">Événement privé</option>
+                                <option value="portrait">Portrait</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" id="date" name="date" placeholder="Date souhaitée">
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" placeholder="Décrivez votre projet..." rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane"></i>
+                            Envoyer ma demande
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="images/logo.PNG" alt="Logo" class="footer-logo-img">
+                        <span>Studio Pro</span>
+                    </div>
+                    <p>Photographe professionnel spécialisé dans les événements et portraits. Votre satisfaction est ma priorité.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://wa.me/33123456789" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#services">Mariages</a></li>
+                        <li><a href="#services">Corporate</a></li>
+                        <li><a href="#services">Événements</a></li>
+                        <li><a href="#services">Portraits</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +33 1 23 45 67 89</li>
+                        <li><i class="fas fa-envelope"></i> contact@studiopro.fr</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Paris, France</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Studio Pro. Tous droits réservés.</p>
+                <div class="footer-links">
+                    <a href="#">Mentions légales</a>
+                    <a href="#">Politique de confidentialité</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script-pro.js"></script>
+</body>
+</html>
