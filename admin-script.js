@@ -12,8 +12,11 @@ function checkAdminAccess() {
         const userPassword = prompt('Mot de passe administrateur:');
         if (userPassword === 'prima2024') {
             localStorage.setItem('adminAccess', 'prima2024');
+            return true;
         } else {
-            alert('Accès refusé');
+            if (userPassword !== null) {
+                alert('Accès refusé');
+            }
             window.location.href = 'index.html';
             return false;
         }

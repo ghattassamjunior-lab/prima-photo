@@ -1,12 +1,7 @@
 {
-  "name": "prima-photo-portfolio",
+  "name": "prima-photo",
   "version": "1.0.0",
-  "description": "Portfolio de photographie moderne avec interface d'administration",
-  "main": "index.html",
   "scripts": {
-    "start": "npx serve -s . -p $PORT"
-  },
-  "dependencies": {
-    "serve": "^14.2.1"
+    "start": "npx serve -s ."
   }
 }
