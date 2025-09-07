@@ -373,10 +373,10 @@ function loadStoredContent() {
     }
 }
 
-// Charger les données depuis JSON et localStorage
-async function loadDataFromJSON() {
+// Charger les données depuis GitHub
+async function loadDataFromGitHub() {
     try {
-        const response = await fetch('./data.json');
+        const response = await fetch('https://raw.githubusercontent.com/JonathanK-N/prima-photo/master/data.json');
         const data = await response.json();
         
         // Appliquer les données JSON
@@ -437,16 +437,16 @@ async function loadDataFromJSON() {
             if (contactItems[2] && data.contact.address) contactItems[2].textContent = data.contact.address;
         }
         
-        console.log('Données JSON chargées');
+        console.log('Données GitHub chargées');
     } catch (error) {
-        console.log('Pas de fichier JSON, utilisation des données par défaut');
+        console.log('Pas de connexion GitHub, utilisation des données par défaut');
     }
 }
 
 // Charger les données au démarrage
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
-        loadDataFromJSON(); // Charger JSON en premier
+        loadDataFromGitHub(); // Charger GitHub en premier
         loadStoredImages(); // Puis localStorage
         loadAboutFromIndexedDB(); // Puis IndexedDB
     }, 100);
@@ -528,6 +528,7 @@ async function loadAboutFromIndexedDB() {
 
 // Synchronisation améliorée
 function forceSync() {
+    loadDataFromGitHub();
     loadStoredImages();
     loadAboutFromIndexedDB();
     console.log('Synchronisation forcée');
