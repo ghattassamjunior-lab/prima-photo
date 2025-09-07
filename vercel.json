@@ -3,12 +3,9 @@
     {
       "source": "/admin",
       "destination": "/admin.html"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ],
+  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
