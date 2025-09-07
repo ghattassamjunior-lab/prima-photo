@@ -373,11 +373,16 @@ function loadStoredContent() {
     }
 }
 
-// Charger les données depuis GitHub
-async function loadDataFromGitHub() {
+// Charger les données depuis l'API
+async function loadDataFromAPI() {
     try {
-        const response = await fetch('https://raw.githubusercontent.com/JonathanK-N/prima-photo/master/data.json');
-        const data = await response.json();
+        const hero = await portfolioAPI.getData('hero');
+        const about = await portfolioAPI.getData('about');
+        const services = await portfolioAPI.getData('services');
+        const contact = await portfolioAPI.getData('contact');
+        const photos = await portfolioAPI.getPhotos();
+        
+        const data = { hero, about, services, contact, photos };
         
         // Appliquer les données JSON
         if (data.hero) {
@@ -437,16 +442,16 @@ async function loadDataFromGitHub() {
             if (contactItems[2] && data.contact.address) contactItems[2].textContent = data.contact.address;
         }
         
-        console.log('Données GitHub chargées');
+        console.log('Données API chargées');
     } catch (error) {
-        console.log('Pas de connexion GitHub, utilisation des données par défaut');
+        console.log('Pas de connexion API, utilisation des données par défaut');
     }
 }
 
 // Charger les données au démarrage
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
-        loadDataFromGitHub(); // Charger GitHub en premier
+        loadDataFromAPI(); // Charger API en premier
         loadStoredImages(); // Puis localStorage
         loadAboutFromIndexedDB(); // Puis IndexedDB
     }, 100);
@@ -528,9 +533,7 @@ async function loadAboutFromIndexedDB() {
 
 // Synchronisation améliorée
 function forceSync() {
-    loadDataFromGitHub();
-    loadStoredImages();
-    loadAboutFromIndexedDB();
+    loadDataFromAPI();
     console.log('Synchronisation forcée');
 }
 
