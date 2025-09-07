@@ -537,6 +537,12 @@ function forceSync() {
     console.log('Synchronisation forcée');
 }
 
+// Écouter les changements de données
+window.addEventListener('dataChanged', function(event) {
+    console.log('Données changées, rechargement...');
+    setTimeout(forceSync, 100);
+});
+
 // Recharger le contenu toutes les 2 secondes
 setInterval(forceSync, 2000);
 
