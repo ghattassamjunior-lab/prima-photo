@@ -1,0 +1,462 @@
+// Configuration des images (remplacez par vos vraies images)
+const portfolioImages = [
+    { src: 'https://picsum.photos/800/600?random=1', category: 'portrait', title: 'Portrait 1' },
+    { src: 'https://picsum.photos/800/600?random=2', category: 'mariage', title: 'Mariage 1' },
+    { src: 'https://picsum.photos/800/600?random=3', category: 'evenement', title: 'Événement 1' },
+    { src: 'https://picsum.photos/800/600?random=4', category: 'nature', title: 'Nature 1' },
+    { src: 'https://picsum.photos/800/600?random=5', category: 'portrait', title: 'Portrait 2' },
+    { src: 'https://picsum.photos/800/600?random=6', category: 'mariage', title: 'Mariage 2' },
+    { src: 'https://picsum.photos/800/600?random=7', category: 'evenement', title: 'Événement 2' },
+    { src: 'https://picsum.photos/800/600?random=8', category: 'nature', title: 'Nature 2' },
+    { src: 'https://picsum.photos/800/600?random=9', category: 'portrait', title: 'Portrait 3' }
+];
+
+// Variables globales
+let currentImageIndex = 0;
+let filteredImages = [...portfolioImages];
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function() {
+    initializeGallery();
+    initializeNavigation();
+    initializeLightbox();
+    initializeScrollEffects();
+});
+
+// Navigation mobile
+function initializeNavigation() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+    
+    // Fermer le menu mobile
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+    
+    // Scroll fluide
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// Galerie
+function initializeGallery() {
+    loadGalleryImages();
+    initializeFilters();
+}
+
+function loadGalleryImages(images = portfolioImages) {
+    const galleryGrid = document.getElementById('galleryGrid');
+    
+    galleryGrid.innerHTML = images.map((image, index) => `
+        <div class="gallery-item" data-category="${image.category}" data-index="${index}">
+            <img src="${image.src}" alt="${image.title}" loading="lazy">
+            <div class="gallery-overlay">
+                <i class="fas fa-search-plus"></i>
+            </div>
+        </div>
+    `).join('');
+    
+    // Ajouter les événements de clic
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const index = parseInt(item.dataset.index);
+            openLightbox(index);
+        });
+    });
+}
+
+function initializeFilters() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Retirer active de tous les boutons
+            filterBtns.forEach(b => b.classList.remove('active'));
+            // Ajouter active au bouton cliqué
+            btn.classList.add('active');
+            
+            const filter = btn.dataset.filter;
+            filterGallery(filter);
+        });
+    });
+}
+
+function filterGallery(filter) {
+    const galleryGrid = document.getElementById('galleryGrid');
+    
+    // Fade out
+    galleryGrid.style.opacity = '0';
+    
+    setTimeout(() => {
+        if (filter === 'all') {
+            filteredImages = [...portfolioImages];
+        } else {
+            filteredImages = portfolioImages.filter(img => img.category === filter);
+        }
+        
+        loadGalleryImages(filteredImages);
+        
+        // Fade in
+        galleryGrid.style.opacity = '1';
+    }, 300);
+}
+
+// Lightbox
+function initializeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxClose = document.querySelector('.lightbox-close');
+    const lightboxPrev = document.querySelector('.lightbox-prev');
+    const lightboxNext = document.querySelector('.lightbox-next');
+    
+    // Fermer lightbox
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+    
+    // Navigation lightbox
+    lightboxPrev.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + filteredImages.length) % filteredImages.length;
+        updateLightboxImage();
+    });
+    
+    lightboxNext.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % filteredImages.length;
+        updateLightboxImage();
+    });
+    
+    // Navigation clavier
+    document.addEventListener('keydown', (e) => {
+        if (lightbox.style.display === 'block') {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                lightboxPrev.click();
+            } else if (e.key === 'ArrowRight') {
+                lightboxNext.click();
+            }
+        }
+    });
+}
+
+function openLightbox(index) {
+    currentImageIndex = index;
+    updateLightboxImage();
+    document.getElementById('lightbox').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function updateLightboxImage() {
+    const lightboxImage = document.querySelector('.lightbox-image');
+    const currentImage = filteredImages[currentImageIndex];
+    
+    lightboxImage.src = currentImage.src;
+    lightboxImage.alt = currentImage.title;
+}
+
+// Effets de scroll
+function initializeScrollEffects() {
+    const navbar = document.querySelector('.navbar');
+    
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+    
+    // Animation au scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observer les éléments
+    document.querySelectorAll('.gallery-item, .stat, .contact-item').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+}
+
+// Formulaire de contact
+document.querySelector('.contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const button = this.querySelector('button');
+    const originalText = button.textContent;
+    
+    button.textContent = 'Envoi...';
+    button.disabled = true;
+    
+    // Simuler l'envoi
+    setTimeout(() => {
+        button.textContent = 'Envoyé !';
+        button.style.background = '#27ae60';
+        
+        setTimeout(() => {
+            button.textContent = originalText;
+            button.disabled = false;
+            button.style.background = '#333';
+            this.reset();
+        }, 2000);
+    }, 1500);
+});
+
+// Animation hamburger
+document.querySelector('.hamburger').addEventListener('click', function() {
+    const spans = this.querySelectorAll('span');
+    spans.forEach((span, index) => {
+        if (this.classList.contains('active')) {
+            if (index === 0) span.style.transform = 'rotate(45deg) translate(5px, 5px)';
+            if (index === 1) span.style.opacity = '0';
+            if (index === 2) span.style.transform = 'rotate(-45deg) translate(7px, -6px)';
+        } else {
+            span.style.transform = 'none';
+            span.style.opacity = '1';
+        }
+    });
+});
+
+// Chargement des données depuis localStorage (pour l'admin)
+function loadStoredImages() {
+    const storedPhotos = localStorage.getItem('sitePhotos');
+    if (storedPhotos) {
+        const photos = JSON.parse(storedPhotos);
+        if (photos.length > 0) {
+            // Convertir le format admin vers le format galerie
+            const convertedImages = photos.map(photo => ({
+                src: photo.image,
+                category: photo.category,
+                title: photo.title
+            }));
+            
+            // Remplacer les images par défaut
+            portfolioImages.splice(0, portfolioImages.length, ...convertedImages);
+            filteredImages = [...portfolioImages];
+            
+            // Recharger la galerie
+            loadGalleryImages();
+        }
+    }
+    
+    // Charger les services
+    loadStoredServices();
+    
+    // Charger les autres données
+    loadStoredContent();
+}
+
+function loadStoredServices() {
+    const services = JSON.parse(localStorage.getItem('portfolioServices'));
+    if (services) {
+        const serviceCards = document.querySelectorAll('.service-card');
+        
+        if (services.portrait && serviceCards[0]) {
+            serviceCards[0].querySelector('p').textContent = services.portrait.description || 'Séances photo portrait en studio ou extérieur';
+            serviceCards[0].querySelector('.price').textContent = services.portrait.price || 'À partir de 150€';
+        }
+        
+        if (services.mariage && serviceCards[1]) {
+            serviceCards[1].querySelector('p').textContent = services.mariage.description || 'Couverture complète de votre jour J';
+            serviceCards[1].querySelector('.price').textContent = services.mariage.price || 'À partir de 800€';
+        }
+        
+        if (services.evenement && serviceCards[2]) {
+            serviceCards[2].querySelector('p').textContent = services.evenement.description || 'Reportage photo pour tous vos événements';
+            serviceCards[2].querySelector('.price').textContent = services.evenement.price || 'À partir de 300€';
+        }
+    }
+}
+
+function loadStoredContent() {
+    // Charger l'accueil
+    const hero = JSON.parse(localStorage.getItem('portfolioHero'));
+    if (hero) {
+        const heroTitle = document.querySelector('.hero-content h1');
+        const heroSubtitle = document.querySelector('.hero-content p');
+        const ctaBtn = document.querySelector('.cta-btn');
+        const heroImage = document.querySelector('.hero-image');
+        
+        if (heroTitle && hero.title) heroTitle.textContent = hero.title;
+        if (heroSubtitle && hero.subtitle) heroSubtitle.textContent = hero.subtitle;
+        if (ctaBtn && hero.buttonText) ctaBtn.textContent = hero.buttonText;
+        
+        // Appliquer l'arrière-plan
+        if (heroImage) {
+            if (hero.backgroundType === 'gradient') {
+                heroImage.style.background = `linear-gradient(135deg, ${hero.gradientColor1 || '#667eea'} 0%, ${hero.gradientColor2 || '#764ba2'} 100%)`;
+            } else if (hero.backgroundType === 'image' && hero.backgroundImage) {
+                heroImage.style.background = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${hero.backgroundImage}')`;
+                heroImage.style.backgroundSize = 'cover';
+                heroImage.style.backgroundPosition = 'center';
+            } else if (hero.backgroundType === 'color') {
+                heroImage.style.background = hero.backgroundColor || '#333333';
+            }
+        }
+    }
+    
+    // Charger les paramètres généraux
+    const settings = JSON.parse(localStorage.getItem('portfolioSettings'));
+    if (settings) {
+        const galleryTitle = document.querySelector('.gallery h2');
+        const servicesTitle = document.querySelector('.services h2');
+        const logo = document.querySelector('.nav-brand .logo');
+        
+        if (galleryTitle && settings.galleryTitle) galleryTitle.textContent = settings.galleryTitle;
+        if (servicesTitle && settings.servicesTitle) servicesTitle.textContent = settings.servicesTitle;
+        if (logo && settings.logo) logo.src = settings.logo;
+    }
+    
+    // Charger À propos depuis IndexedDB uniquement
+    loadAboutFromIndexedDB();
+    
+    // Charger contact
+    const contact = JSON.parse(localStorage.getItem('portfolioContact'));
+    if (contact) {
+        const contactTitle = document.querySelector('.contact h2');
+        const contactItems = document.querySelectorAll('.contact-item span');
+        const contactForm = document.querySelector('.contact-form');
+        
+        if (contactTitle && contact.sectionTitle) contactTitle.textContent = contact.sectionTitle;
+        if (contactItems[0] && contact.email) contactItems[0].textContent = contact.email;
+        if (contactItems[1] && contact.phone) contactItems[1].textContent = contact.phone;
+        if (contactItems[2] && contact.address) contactItems[2].textContent = contact.address;
+        
+        if (contactForm && contact.formPlaceholders) {
+            const nameInput = contactForm.querySelector('input[type="text"]');
+            const emailInput = contactForm.querySelector('input[type="email"]');
+            const messageTextarea = contactForm.querySelector('textarea');
+            const submitButton = contactForm.querySelector('button');
+            
+            if (nameInput && contact.formPlaceholders.name) nameInput.placeholder = contact.formPlaceholders.name;
+            if (emailInput && contact.formPlaceholders.email) emailInput.placeholder = contact.formPlaceholders.email;
+            if (messageTextarea && contact.formPlaceholders.message) messageTextarea.placeholder = contact.formPlaceholders.message;
+            if (submitButton && contact.formPlaceholders.button) submitButton.textContent = contact.formPlaceholders.button;
+        }
+    }
+}
+
+// Charger les données stockées au démarrage
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        loadStoredImages();
+        loadAboutFromIndexedDB();
+    }, 100);
+});
+
+// Écouter les changements de localStorage
+window.addEventListener('storage', function(e) {
+    if (e.key && e.key.startsWith('portfolio')) {
+        setTimeout(() => {
+            loadStoredImages();
+            loadAboutFromIndexedDB();
+        }, 100);
+    }
+});
+
+// Fonction de réservation WhatsApp
+function reserveService(serviceType) {
+    const contact = JSON.parse(localStorage.getItem('portfolioContact'));
+    const whatsappNumber = contact?.whatsapp;
+    
+    if (!whatsappNumber) {
+        alert('Numéro WhatsApp non configuré. Contactez l\'administrateur.');
+        return;
+    }
+    
+    const serviceNames = {
+        portrait: 'Portrait',
+        mariage: 'Mariage', 
+        evenement: 'Événement'
+    };
+    
+    const serviceName = serviceNames[serviceType] || serviceType;
+    const message = `Bonjour, je souhaite réserver une séance ${serviceName}. Pouvez-vous me donner plus d'informations sur vos disponibilités et tarifs ?`;
+    
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+// Fonction pour charger depuis IndexedDB
+async function loadAboutFromIndexedDB() {
+    try {
+        await portfolioDB.init();
+        const about = await portfolioDB.getData('portfolioAbout');
+        
+        if (about) {
+            const aboutTitle = document.querySelector('.about h2');
+            const aboutText = document.querySelector('.about-text p');
+            const aboutImage = document.querySelector('.about-image');
+            const stats = document.querySelectorAll('.stat .number');
+            const statLabels = document.querySelectorAll('.stat .label');
+            
+            if (aboutTitle && about.sectionTitle) aboutTitle.textContent = about.sectionTitle;
+            if (aboutText && about.para1) aboutText.textContent = about.para1;
+            
+            if (aboutImage) {
+                if (about.image) {
+                    aboutImage.innerHTML = `<img src="${about.image}" alt="Photographe" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
+                } else {
+                    aboutImage.innerHTML = '<div class="placeholder">Photo du photographe</div>';
+                }
+            }
+            
+            if (about.stats) {
+                if (stats[0] && about.stats.clients) stats[0].textContent = about.stats.clients + '+';
+                if (stats[1] && about.stats.mariages) stats[1].textContent = about.stats.mariages + '+';
+                if (stats[2] && about.stats.experience) stats[2].textContent = about.stats.experience;
+                
+                if (statLabels[0] && about.stats.clientsLabel) statLabels[0].textContent = about.stats.clientsLabel;
+                if (statLabels[1] && about.stats.mariagesLabel) statLabels[1].textContent = about.stats.mariagesLabel;
+                if (statLabels[2] && about.stats.experienceLabel) statLabels[2].textContent = about.stats.experienceLabel;
+            }
+            
+            console.log('About loaded from IndexedDB:', about);
+        }
+    } catch (error) {
+        console.error('Erreur chargement IndexedDB:', error);
+    }
+}
+
+// Recharger le contenu toutes les 2 secondes (pour développement)
+setInterval(() => {
+    loadStoredImages();
+    loadAboutFromIndexedDB();
+}, 2000);

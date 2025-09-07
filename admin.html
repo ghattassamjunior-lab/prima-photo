@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Portfolio Photographe</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="indexeddb.js"></script>
+    <script src="cropper.js"></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <h2><i class="fas fa-camera"></i> Administration Portfolio</h2>
+            <form id="loginForm">
+                <input type="password" id="adminPassword" placeholder="Mot de passe administrateur" required>
+                <button type="submit">Se connecter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel" style="display: none;">
+        <header class="admin-header">
+            <h1><i class="fas fa-camera"></i> Administration Portfolio Photographe</h1>
+            <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+        </header>
+
+        <nav class="admin-nav">
+            <button class="nav-btn active" data-section="hero">Accueil</button>
+            <button class="nav-btn" data-section="gallery">Galerie</button>
+            <button class="nav-btn" data-section="services">Services</button>
+            <button class="nav-btn" data-section="about">À propos</button>
+            <button class="nav-btn" data-section="contact">Contact</button>
+            <button class="nav-btn" data-section="settings">Paramètres</button>
+        </nav>
+
+        <!-- Hero Management -->
+        <section id="hero-section" class="admin-section active">
+            <h2>Section Accueil</h2>
+            
+            <div class="hero-form">
+                <h3>Textes principaux</h3>
+                <div class="form-group">
+                    <label>Titre principal</label>
+                    <input type="text" id="heroTitle" placeholder="Photographe Professionnel">
+                </div>
+                <div class="form-group">
+                    <label>Sous-titre</label>
+                    <input type="text" id="heroSubtitle" placeholder="Capturer l'essence de chaque moment">
+                </div>
+                <div class="form-group">
+                    <label>Texte du bouton</label>
+                    <input type="text" id="heroButton" placeholder="Découvrir">
+                </div>
+                
+                <h3>Image de fond</h3>
+                <div class="form-group">
+                    <label>Type d'arrière-plan</label>
+                    <select id="heroBackgroundType">
+                        <option value="gradient">Dégradé</option>
+                        <option value="image">Image personnalisée</option>
+                        <option value="color">Couleur unie</option>
+                    </select>
+                </div>
+                
+                <div id="gradientControls" class="bg-controls">
+                    <div class="form-group">
+                        <label>Couleur 1</label>
+                        <input type="color" id="gradientColor1" value="#667eea">
+                    </div>
+                    <div class="form-group">
+                        <label>Couleur 2</label>
+                        <input type="color" id="gradientColor2" value="#764ba2">
+                    </div>
+                </div>
+                
+                <div id="imageControls" class="bg-controls" style="display: none;">
+                    <div class="form-group">
+                        <label>Image de fond</label>
+                        <input type="file" id="heroBackgroundImage" accept="image/*">
+                        <div id="heroImagePreview" class="image-preview"></div>
+                    </div>
+                </div>
+                
+                <div id="colorControls" class="bg-controls" style="display: none;">
+                    <div class="form-group">
+                        <label>Couleur de fond</label>
+                        <input type="color" id="heroBackgroundColor" value="#333333">
+                    </div>
+                </div>
+                
+                <button type="button" onclick="saveHero()">Sauvegarder l'accueil</button>
+            </div>
+        </section>
+
+        <!-- Gallery Management -->
+        <section id="gallery-section" class="admin-section">
+            <h2>Gestion de la Galerie</h2>
+            
+            <div class="add-photo-form">
+                <h3>Ajouter une Photo</h3>
+                <form id="addPhotoForm">
+                    <input type="text" id="photoTitle" placeholder="Titre de la photo" required>
+                    <input type="text" id="photoDescription" placeholder="Description" required>
+                    <select id="photoCategory" required>
+                        <option value="">Catégorie</option>
+                        <option value="portrait">Portrait</option>
+                        <option value="mariage">Mariage</option>
+                        <option value="evenement">Événement</option>
+                        <option value="nature">Nature</option>
+                    </select>
+                    <div class="upload-options">
+                        <div class="upload-method">
+                            <input type="radio" id="uploadFile" name="uploadMethod" value="file" checked>
+                            <label for="uploadFile">Uploader depuis mon ordinateur</label>
+                        </div>
+                        <div class="upload-method">
+                            <input type="radio" id="uploadUrl" name="uploadMethod" value="url">
+                            <label for="uploadUrl">Utiliser une URL</label>
+                        </div>
+                    </div>
+                    <div id="fileUploadSection">
+                        <input type="file" id="photoFile" accept="image/*" required>
+                        <div id="imagePreview" class="image-preview"></div>
+                    </div>
+                    <div id="urlUploadSection" style="display: none;">
+                        <input type="url" id="photoUrl" placeholder="URL de l'image">
+                    </div>
+                    <button type="submit">Ajouter à la galerie</button>
+                </form>
+            </div>
+
+            <div class="photos-list">
+                <div class="photos-header">
+                    <h3>Photos Actuelles</h3>
+                    <button id="syncSite" class="sync-btn">
+                        <i class="fas fa-sync-alt"></i> Synchroniser le site
+                    </button>
+                </div>
+                <div id="photosList" class="photos-grid"></div>
+            </div>
+        </section>
+
+        <!-- Services Management -->
+        <section id="services-section" class="admin-section">
+            <h2>Gestion des Services</h2>
+            
+            <div class="services-form">
+                <div class="service-item">
+                    <h4><i class="fas fa-user"></i> Portraits</h4>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="portraitDesc" placeholder="Séances photo portrait en studio ou extérieur"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Prix</label>
+                        <input type="text" id="portraitPrice" placeholder="À partir de 150€">
+                    </div>
+                </div>
+                
+                <div class="service-item">
+                    <h4><i class="fas fa-heart"></i> Mariages</h4>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="mariageDesc" placeholder="Couverture complète de votre jour J"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Prix</label>
+                        <input type="text" id="mariagePrice" placeholder="À partir de 800€">
+                    </div>
+                </div>
+                
+                <div class="service-item">
+                    <h4><i class="fas fa-calendar"></i> Événements</h4>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="evenementDesc" placeholder="Reportage photo pour tous vos événements"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Prix</label>
+                        <input type="text" id="evenementPrice" placeholder="À partir de 300€">
+                    </div>
+                </div>
+                
+                <button type="button" onclick="saveServices()">Sauvegarder les services</button>
+            </div>
+        </section>
+        
+        <!-- About Management -->
+        <section id="about-section" class="admin-section">
+            <h2>Section À propos</h2>
+            
+            <div class="about-form">
+                <div class="form-group">
+                    <label>Titre de la section</label>
+                    <input type="text" id="aboutSectionTitle" placeholder="À propos">
+                </div>
+                <div class="form-group">
+                    <label>Premier paragraphe</label>
+                    <textarea id="aboutPara1" placeholder="Passionné de photographie depuis plus de 10 ans..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Deuxième paragraphe</label>
+                    <textarea id="aboutPara2" placeholder="Spécialisé dans le portrait, le mariage..."></textarea>
+                </div>
+                
+                <h4>Photo du photographe</h4>
+                <div class="form-group">
+                    <label>Image du photographe</label>
+                    <div class="image-options">
+                        <div class="option">
+                            <input type="radio" id="aboutImageFile" name="aboutImageType" value="file" checked>
+                            <label for="aboutImageFile">Upload fichier</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="aboutImageLocal" name="aboutImageType" value="local">
+                            <label for="aboutImageLocal">Fichier local</label>
+                        </div>
+                    </div>
+                    
+                    <div id="aboutFileUpload">
+                        <input type="file" id="aboutImage" accept="image/*">
+                        <div id="aboutImagePreview" class="image-preview"></div>
+
+                    </div>
+                    
+                    <div id="aboutLocalPath" style="display: none;">
+                        <input type="text" id="aboutImagePath" placeholder="images/about/photographe.jpg">
+                        <small>Placez votre image dans le dossier images/ et indiquez le chemin</small>
+                    </div>
+                </div>
+                
+                <h4>Statistiques</h4>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <label>Clients satisfaits</label>
+                        <input type="number" id="statClients" placeholder="500">
+                        <input type="text" id="statClientsLabel" placeholder="Clients" class="stat-label-input">
+                    </div>
+                    <div class="stat-item">
+                        <label>Mariages photographiés</label>
+                        <input type="number" id="statMariages" placeholder="100">
+                        <input type="text" id="statMariagesLabel" placeholder="Mariages" class="stat-label-input">
+                    </div>
+                    <div class="stat-item">
+                        <label>Années d'expérience</label>
+                        <input type="number" id="statExperience" placeholder="10">
+                        <input type="text" id="statExperienceLabel" placeholder="Années" class="stat-label-input">
+                    </div>
+                </div>
+                
+                <button type="button" id="saveAboutBtn">Sauvegarder</button>
+            </div>
+        </section>
+
+        <!-- Contact Management -->
+        <section id="contact-section" class="admin-section">
+            <h2>Informations de Contact</h2>
+            
+            <form id="contactForm">
+                <div class="form-group">
+                    <label>Titre de la section</label>
+                    <input type="text" id="contactSectionTitle" placeholder="Contact">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="emailAddress" placeholder="photo@exemple.com">
+                </div>
+                <div class="form-group">
+                    <label>Téléphone</label>
+                    <input type="text" id="phoneNumber" placeholder="+33 1 23 45 67 89">
+                </div>
+                <div class="form-group">
+                    <label>Adresse</label>
+                    <input type="text" id="address" placeholder="Paris, France">
+                </div>
+                <div class="form-group">
+                    <label>Numéro WhatsApp</label>
+                    <input type="text" id="whatsappNumber" placeholder="33123456789">
+                    <small>Format: 33123456789 (sans + ni espaces)</small>
+                </div>
+                
+                <h4>Textes du formulaire</h4>
+                <div class="form-group">
+                    <label>Placeholder nom</label>
+                    <input type="text" id="formNamePlaceholder" placeholder="Nom">
+                </div>
+                <div class="form-group">
+                    <label>Placeholder email</label>
+                    <input type="text" id="formEmailPlaceholder" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <label>Placeholder message</label>
+                    <input type="text" id="formMessagePlaceholder" placeholder="Message">
+                </div>
+                <div class="form-group">
+                    <label>Texte du bouton</label>
+                    <input type="text" id="formButtonText" placeholder="Envoyer">
+                </div>
+                
+                <button type="submit">Sauvegarder</button>
+            </form>
+        </section>
+
+        <!-- Settings -->
+        <section id="settings-section" class="admin-section">
+            <h2>Paramètres</h2>
+            
+            <div class="settings-form">
+                <h3>Textes principaux</h3>
+                <form id="settingsForm">
+                    <div class="form-group">
+                        <label>Titre de la galerie</label>
+                        <input type="text" id="galleryTitle" placeholder="Galerie">
+                    </div>
+                    <div class="form-group">
+                        <label>Titre des services</label>
+                        <input type="text" id="servicesTitle" placeholder="Services">
+                    </div>
+                    <div class="form-group">
+                        <label>Logo du site</label>
+                        <input type="file" id="siteLogo" accept="image/*">
+                        <div id="logoPreview" class="image-preview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Changer le mot de passe admin</label>
+                        <input type="password" id="newPassword" placeholder="Nouveau mot de passe">
+                    </div>
+                    <button type="submit">Sauvegarder</button>
+                </form>
+                
+                <div class="export-section">
+                    <h3>Gestion des données</h3>
+                    <button type="button" onclick="exportData()" class="export-btn">
+                        <i class="fas fa-download"></i> Exporter les données
+                    </button>
+                    <button type="button" onclick="importData()" class="import-btn">
+                        <i class="fas fa-upload"></i> Importer les données
+                    </button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Photographe - Captura</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="indexeddb.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="images/logo.PNG" alt="Logo" class="logo">
+            <span class="brand-name">Prima Photo</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#gallery">Galerie</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#about">À propos</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-image">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1>Photographe Professionnel</h1>
+                <p>Capturer l'essence de chaque moment</p>
+                <a href="#gallery" class="cta-btn">Découvrir</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <h2>Galerie</h2>
+            
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-filter="all">Tout</button>
+                <button class="filter-btn" data-filter="portrait">Portrait</button>
+                <button class="filter-btn" data-filter="mariage">Mariage</button>
+                <button class="filter-btn" data-filter="evenement">Événement</button>
+                <button class="filter-btn" data-filter="nature">Nature</button>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Images will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2>Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-user"></i>
+                    <h3>Portraits</h3>
+                    <p>Séances photo portrait en studio ou extérieur</p>
+                    <div class="price">À partir de 150€</div>
+                    <button class="reserve-btn" onclick="reserveService('portrait')">Réserver</button>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Mariages</h3>
+                    <p>Couverture complète de votre jour J</p>
+                    <div class="price">À partir de 800€</div>
+                    <button class="reserve-btn" onclick="reserveService('mariage')">Réserver</button>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-calendar"></i>
+                    <h3>Événements</h3>
+                    <p>Reportage photo pour tous vos événements</p>
+                    <div class="price">À partir de 300€</div>
+                    <button class="reserve-btn" onclick="reserveService('evenement')">Réserver</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>À propos</h2>
+                    <p>Passionné de photographie depuis plus de 10 ans, je capture vos moments les plus précieux avec un œil artistique et une approche professionnelle.</p>
+                    <div class="stats">
+                        <div class="stat">
+                            <span class="number">500+</span>
+                            <span class="label">Clients</span>
+                        </div>
+                        <div class="stat">
+                            <span class="number">100+</span>
+                            <span class="label">Mariages</span>
+                        </div>
+                        <div class="stat">
+                            <span class="number">10</span>
+                            <span class="label">Années</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="placeholder">Photo du photographe</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Contact</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>photo@exemple.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+33 1 23 45 67 89</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Paris, France</span>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <input type="text" placeholder="Nom" required>
+                    <input type="email" placeholder="Email" required>
+                    <textarea placeholder="Message" rows="5" required></textarea>
+                    <button type="submit">Envoyer</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <span class="lightbox-close">&times;</span>
+            <img src="" alt="" class="lightbox-image">
+            <div class="lightbox-nav">
+                <button class="lightbox-prev">&#10094;</button>
+                <button class="lightbox-next">&#10095;</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
