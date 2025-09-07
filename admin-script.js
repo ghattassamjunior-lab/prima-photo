@@ -298,7 +298,7 @@ function saveServices() {
 
 // Gestion de la section À propos
 // Gestion de l'accueil
-function saveHero() {
+async function saveHero() {
     const hero = {
         title: document.getElementById('heroTitle').value,
         subtitle: document.getElementById('heroSubtitle').value,
@@ -311,8 +311,7 @@ function saveHero() {
             document.getElementById('heroImagePreview').querySelector('img')?.src : null
     };
     
-    localStorage.setItem('portfolioHero', JSON.stringify(hero));
-    updateSiteContent();
+    await portfolioAPI.saveData('hero', hero);
     showNotification('Section accueil sauvegardée!');
 }
 
