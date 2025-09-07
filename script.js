@@ -450,10 +450,18 @@ async function loadDataFromAPI() {
 
 // Charger les données au démarrage
 document.addEventListener('DOMContentLoaded', () => {
+    // Charger depuis URL en premier (synchronisation)
+    const synced = urlSync.loadFromURL();
+    
     setTimeout(() => {
-        loadDataFromAPI(); // Charger API en premier
+        loadDataFromAPI(); // Charger API
         loadStoredImages(); // Puis localStorage
         loadAboutFromIndexedDB(); // Puis IndexedDB
+        
+        if (synced) {
+            // Nettoyer l'URL après synchronisation
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
     }, 100);
 });
 

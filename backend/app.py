@@ -2,13 +2,23 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sqlite3
 import json
+import os
 from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
 
+# Configuration pour production
+if os.environ.get('FLASK_ENV') == 'production':
+    app.config['DATABASE'] = '/tmp/portfolio.db'
+else:
+    app.config['DATABASE'] = 'portfolio.db'
+
+def get_db():
+    return sqlite3.connect(app.config['DATABASE'])
+
 def init_db():
-    conn = sqlite3.connect('portfolio.db')
+    conn = get_db()
     cursor = conn.cursor()
     
     cursor.execute('''
@@ -36,7 +46,7 @@ def init_db():
 
 @app.route('/api/data/<section>', methods=['GET'])
 def get_data(section):
-    conn = sqlite3.connect('portfolio.db')
+    conn = get_db()
     cursor = conn.cursor()
     cursor.execute('SELECT data FROM portfolio_data WHERE section = ?', (section,))
     result = cursor.fetchone()
@@ -50,7 +60,7 @@ def get_data(section):
 @app.route('/api/data/<section>', methods=['POST'])
 def save_data(section):
     data = request.json
-    conn = sqlite3.connect('portfolio.db')
+    conn = get_db()
     cursor = conn.cursor()
     cursor.execute('''
         INSERT OR REPLACE INTO portfolio_data (section, data, updated_at)
@@ -62,7 +72,7 @@ def save_data(section):
 
 @app.route('/api/photos', methods=['GET'])
 def get_photos():
-    conn = sqlite3.connect('portfolio.db')
+    conn = get_db()
     cursor = conn.cursor()
     cursor.execute('SELECT id, title, description, category, image_data FROM photos ORDER BY created_at DESC')
     photos = []
@@ -80,7 +90,7 @@ def get_photos():
 @app.route('/api/photos', methods=['POST'])
 def add_photo():
     data = request.json
-    conn = sqlite3.connect('portfolio.db')
+    conn = get_db()
     cursor = conn.cursor()
     cursor.execute('''
         INSERT INTO photos (title, description, category, image_data)
