@@ -1,9 +1,18 @@
-<!DOCTYPE html>
+// Générateur HTML pour synchronisation cross-device
+function generateUpdatedHTML() {
+    // Récupérer les données de l'admin
+    const hero = JSON.parse(localStorage.getItem('portfolioHero')) || {};
+    const about = JSON.parse(localStorage.getItem('portfolioAbout')) || {};
+    const services = JSON.parse(localStorage.getItem('portfolioServices')) || {};
+    const contact = JSON.parse(localStorage.getItem('portfolioContact')) || {};
+    
+    // Template HTML avec les nouvelles données
+    const htmlTemplate = `<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Photographe - Captura</title>
+    <title>Portfolio Photographe - Prima Photo</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="indexeddb.js"></script>
@@ -34,9 +43,9 @@
         <div class="hero-image">
             <div class="hero-overlay"></div>
             <div class="hero-content">
-                <h1 id="heroTitle">Prima Photo Studio</h1>
-                <p id="heroSubtitle">Votre moment, notre passion</p>
-                <a href="#gallery" class="cta-btn" id="heroButton">Découvrir nos services</a>
+                <h1>${hero.title || 'Prima Photo Studio'}</h1>
+                <p>${hero.subtitle || 'Votre moment, notre passion'}</p>
+                <a href="#gallery" class="cta-btn">${hero.buttonText || 'Découvrir nos services'}</a>
             </div>
         </div>
     </section>
@@ -70,22 +79,22 @@
                 <div class="service-card">
                     <i class="fas fa-user"></i>
                     <h3>Portraits</h3>
-                    <p>Séances photo portrait en studio ou extérieur</p>
-                    <div class="price">À partir de 150€</div>
+                    <p>${services.portrait?.description || 'Séances photo portrait en studio ou extérieur'}</p>
+                    <div class="price">${services.portrait?.price || 'À partir de 150€'}</div>
                     <button class="reserve-btn" onclick="reserveService('portrait')">Réserver</button>
                 </div>
                 <div class="service-card">
                     <i class="fas fa-heart"></i>
                     <h3>Mariages</h3>
-                    <p>Couverture complète de votre jour J</p>
-                    <div class="price">À partir de 800€</div>
+                    <p>${services.mariage?.description || 'Couverture complète de votre jour J'}</p>
+                    <div class="price">${services.mariage?.price || 'À partir de 800€'}</div>
                     <button class="reserve-btn" onclick="reserveService('mariage')">Réserver</button>
                 </div>
                 <div class="service-card">
                     <i class="fas fa-calendar"></i>
                     <h3>Événements</h3>
-                    <p>Reportage photo pour tous vos événements</p>
-                    <div class="price">À partir de 300€</div>
+                    <p>${services.evenement?.description || 'Reportage photo pour tous vos événements'}</p>
+                    <div class="price">${services.evenement?.price || 'À partir de 300€'}</div>
                     <button class="reserve-btn" onclick="reserveService('evenement')">Réserver</button>
                 </div>
             </div>
@@ -97,25 +106,25 @@
         <div class="container">
             <div class="about-content">
                 <div class="about-text">
-                    <h2 id="aboutTitle">À propos</h2>
-                    <p id="aboutText">Passionné de photographie depuis plus de 10 ans, je capture vos moments les plus précieux avec un œil artistique et une approche professionnelle.</p>
+                    <h2>${about.sectionTitle || 'À propos'}</h2>
+                    <p>${about.para1 || 'Passionné de photographie depuis plus de 10 ans, je capture vos moments les plus précieux avec un œil artistique et une approche professionnelle.'}</p>
                     <div class="stats">
                         <div class="stat">
-                            <span class="number" id="statClients">500+</span>
-                            <span class="label" id="labelClients">Clients</span>
+                            <span class="number">${about.stats?.clients || '500'}+</span>
+                            <span class="label">${about.stats?.clientsLabel || 'Clients'}</span>
                         </div>
                         <div class="stat">
-                            <span class="number" id="statMariages">100+</span>
-                            <span class="label" id="labelMariages">Mariages</span>
+                            <span class="number">${about.stats?.mariages || '100'}+</span>
+                            <span class="label">${about.stats?.mariagesLabel || 'Mariages'}</span>
                         </div>
                         <div class="stat">
-                            <span class="number" id="statExperience">10</span>
-                            <span class="label" id="labelExperience">Années</span>
+                            <span class="number">${about.stats?.experience || '10'}</span>
+                            <span class="label">${about.stats?.experienceLabel || 'Années'}</span>
                         </div>
                     </div>
                 </div>
                 <div class="about-image">
-                    <div class="placeholder">Photo du photographe</div>
+                    ${about.image ? `<img src="${about.image}" alt="Photographe" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">` : '<div class="placeholder">Photo du photographe</div>'}
                 </div>
             </div>
         </div>
@@ -124,27 +133,27 @@
     <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
-            <h2>Contact</h2>
+            <h2>${contact.sectionTitle || 'Contact'}</h2>
             <div class="contact-content">
                 <div class="contact-info">
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
-                        <span>photo@exemple.com</span>
+                        <span>${contact.email || 'photo@exemple.com'}</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
-                        <span>+33 1 23 45 67 89</span>
+                        <span>${contact.phone || '+33 1 23 45 67 89'}</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>Paris, France</span>
+                        <span>${contact.address || 'Paris, France'}</span>
                     </div>
                 </div>
                 <form class="contact-form">
-                    <input type="text" placeholder="Nom" required>
-                    <input type="email" placeholder="Email" required>
-                    <textarea placeholder="Message" rows="5" required></textarea>
-                    <button type="submit">Envoyer</button>
+                    <input type="text" placeholder="${contact.formPlaceholders?.name || 'Nom'}" required>
+                    <input type="email" placeholder="${contact.formPlaceholders?.email || 'Email'}" required>
+                    <textarea placeholder="${contact.formPlaceholders?.message || 'Message'}" rows="5" required></textarea>
+                    <button type="submit">${contact.formPlaceholders?.button || 'Envoyer'}</button>
                 </form>
             </div>
         </div>
@@ -162,13 +171,23 @@
         </div>
     </div>
 
-    <!-- Bouton de synchronisation (dev) -->
-    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
-        <button onclick="forceSync()" style="background: #333; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">
-            🔄 Sync
-        </button>
-    </div>
-
     <script src="script.js"></script>
 </body>
-</html>
+</html>`;
+
+    return htmlTemplate;
+}
+
+// Fonction pour télécharger le HTML généré
+function downloadGeneratedHTML() {
+    const htmlContent = generateUpdatedHTML();
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'index.html';
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showNotification('Fichier index.html généré ! Remplacez le fichier sur votre serveur.');
+}

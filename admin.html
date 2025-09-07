@@ -334,8 +334,11 @@
                 
                 <div class="export-section">
                     <h3>Gestion des données</h3>
+                    <button type="button" onclick="downloadGeneratedHTML()" class="export-btn" style="background: #27ae60; margin-bottom: 10px;">
+                        <i class="fas fa-code"></i> Générer HTML (Synchronisation)
+                    </button>
                     <button type="button" onclick="exportToJSON()" class="export-btn" style="background: #e74c3c; margin-bottom: 10px;">
-                        <i class="fas fa-sync-alt"></i> Exporter vers JSON (Synchronisation)
+                        <i class="fas fa-sync-alt"></i> Exporter vers JSON
                     </button>
                     <button type="button" onclick="exportData()" class="export-btn">
                         <i class="fas fa-download"></i> Exporter les données
@@ -352,6 +355,7 @@
         </section>
     </div>
 
+    <script src="generate-html.js"></script>
     <script src="admin-script.js"></script>
 </body>
 </html>
