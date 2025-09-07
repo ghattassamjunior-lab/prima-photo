@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     await portfolioDB.init();
     initializeAdmin();
     loadStoredData();
+    await loadPhotosFromAPI();
 });
 
 // Initialisation de l'admin
@@ -149,7 +150,7 @@ function previewImage(e) {
     }
 }
 
-function addPhoto(e) {
+async function addPhoto(e) {
     e.preventDefault();
     
     const title = document.getElementById('photoTitle').value;
@@ -157,50 +158,49 @@ function addPhoto(e) {
     const category = document.getElementById('photoCategory').value;
     const method = document.querySelector('input[name="uploadMethod"]:checked').value;
     
-    let imageData = '';
-    
     if (method === 'file') {
         const file = document.getElementById('photoFile').files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const photo = {
-                    id: Date.now(),
+            reader.onload = async function(e) {
+                const photoData = {
                     title,
                     description,
                     category,
-                    image: e.target.result,
-                    date: new Date().toISOString()
+                    image: e.target.result
                 };
                 
-                photos.push(photo);
-                savePhotos();
-                loadPhotosGrid();
-                document.getElementById('addPhotoForm').reset();
-                document.getElementById('imagePreview').innerHTML = '';
-                
-                showNotification('Photo ajoutée avec succès!');
+                const result = await portfolioAPI.addPhoto(photoData);
+                if (result.success) {
+                    await loadPhotosFromAPI();
+                    document.getElementById('addPhotoForm').reset();
+                    document.getElementById('imagePreview').innerHTML = '';
+                    showNotification('Photo ajoutée avec succès!');
+                }
             };
             reader.readAsDataURL(file);
         }
     } else {
         const url = document.getElementById('photoUrl').value;
-        const photo = {
-            id: Date.now(),
+        const photoData = {
             title,
             description,
             category,
-            image: url,
-            date: new Date().toISOString()
+            image: url
         };
         
-        photos.push(photo);
-        savePhotos();
-        loadPhotosGrid();
-        document.getElementById('addPhotoForm').reset();
-        
-        showNotification('Photo ajoutée avec succès!');
+        const result = await portfolioAPI.addPhoto(photoData);
+        if (result.success) {
+            await loadPhotosFromAPI();
+            document.getElementById('addPhotoForm').reset();
+            showNotification('Photo ajoutée avec succès!');
+        }
     }
+}
+
+async function loadPhotosFromAPI() {
+    photos = await portfolioAPI.getPhotos();
+    loadPhotosGrid();
 }
 
 function loadPhotosGrid() {
