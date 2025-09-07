@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synchronisation - Prima Photo</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        .sync-box { border: 2px solid #333; padding: 30px; margin: 20px 0; border-radius: 10px; }
+        button { padding: 15px 30px; margin: 10px; font-size: 16px; cursor: pointer; border: none; border-radius: 5px; }
+        .export-btn { background: #e74c3c; color: white; }
+        .import-btn { background: #27ae60; color: white; }
+        textarea { width: 100%; height: 200px; margin: 10px 0; font-family: monospace; }
+        .instructions { background: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>🔄 Synchronisation Prima Photo</h1>
+    
+    <div class="instructions">
+        <h3>Comment synchroniser entre appareils :</h3>
+        <ol>
+            <li><strong>Sur l'appareil source</strong> (où vous avez fait les modifications) : Cliquez "Exporter les données"</li>
+            <li><strong>Copiez le code</strong> qui apparaît dans la zone de texte</li>
+            <li><strong>Sur l'autre appareil</strong> : Collez le code et cliquez "Importer les données"</li>
+            <li><strong>Actualisez</strong> le site principal pour voir les changements</li>
+        </ol>
+    </div>
+
+    <div class="sync-box">
+        <h3>📤 Exporter les données</h3>
+        <button class="export-btn" onclick="exportAllData()">Exporter les données</button>
+        <textarea id="exportData" placeholder="Les données exportées apparaîtront ici..."></textarea>
+    </div>
+
+    <div class="sync-box">
+        <h3>📥 Importer les données</h3>
+        <textarea id="importData" placeholder="Collez ici les données à importer..."></textarea>
+        <button class="import-btn" onclick="importAllData()">Importer les données</button>
+    </div>
+
+    <div id="status" style="margin: 20px 0; padding: 10px; border-radius: 5px;"></div>
+
+    <script src="indexeddb.js"></script>
+    <script>
+        async function exportAllData() {
+            try {
+                await portfolioDB.init();
+                
+                const data = {
+                    photos: JSON.parse(localStorage.getItem('portfolioPhotos')) || [],
+                    hero: JSON.parse(localStorage.getItem('portfolioHero')) || {},
+                    about: await portfolioDB.getData('portfolioAbout') || {},
+                    services: JSON.parse(localStorage.getItem('portfolioServices')) || {},
+                    contact: JSON.parse(localStorage.getItem('portfolioContact')) || {},
+                    settings: JSON.parse(localStorage.getItem('portfolioSettings')) || {},
+                    timestamp: new Date().toISOString()
+                };
+                
+                document.getElementById('exportData').value = JSON.stringify(data, null, 2);
+                showStatus('Données exportées avec succès !', 'success');
+            } catch (error) {
+                showStatus('Erreur lors de l\'export : ' + error.message, 'error');
+            }
+        }
+
+        async function importAllData() {
+            try {
+                const dataText = document.getElementById('importData').value.trim();
+                if (!dataText) {
+                    showStatus('Veuillez coller des données à importer', 'error');
+                    return;
+                }
+
+                const data = JSON.parse(dataText);
+                await portfolioDB.init();
+
+                // Importer dans localStorage
+                if (data.photos) localStorage.setItem('portfolioPhotos', JSON.stringify(data.photos));
+                if (data.hero) localStorage.setItem('portfolioHero', JSON.stringify(data.hero));
+                if (data.services) localStorage.setItem('portfolioServices', JSON.stringify(data.services));
+                if (data.contact) localStorage.setItem('portfolioContact', JSON.stringify(data.contact));
+                if (data.settings) localStorage.setItem('portfolioSettings', JSON.stringify(data.settings));
+
+                // Importer dans IndexedDB
+                if (data.about) await portfolioDB.saveData('portfolioAbout', data.about);
+
+                showStatus('Données importées avec succès ! Actualisez le site principal.', 'success');
+                document.getElementById('importData').value = '';
+            } catch (error) {
+                showStatus('Erreur lors de l\'import : ' + error.message, 'error');
+            }
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.style.background = type === 'success' ? '#d4edda' : '#f8d7da';
+            status.style.color = type === 'success' ? '#155724' : '#721c24';
+            status.style.border = `1px solid ${type === 'success' ? '#c3e6cb' : '#f5c6cb'}`;
+        }
+    </script>
+</body>
+</html>
