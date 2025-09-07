@@ -455,8 +455,18 @@ async function loadAboutFromIndexedDB() {
     }
 }
 
-// Recharger le contenu toutes les 2 secondes (pour développement)
-setInterval(() => {
+// Synchronisation améliorée
+function forceSync() {
     loadStoredImages();
     loadAboutFromIndexedDB();
-}, 2000);
+    console.log('Synchronisation forcée');
+}
+
+// Recharger le contenu toutes les 2 secondes
+setInterval(forceSync, 2000);
+
+// Synchronisation au focus de la fenêtre
+window.addEventListener('focus', forceSync);
+
+// Synchronisation sur changement de localStorage
+window.addEventListener('storage', forceSync);
