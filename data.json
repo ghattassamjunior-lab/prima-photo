@@ -1,0 +1,40 @@
+{
+  "hero": {
+    "title": "Photographe Professionnel",
+    "subtitle": "Capturer l'essence de chaque moment",
+    "buttonText": "Découvrir"
+  },
+  "about": {
+    "sectionTitle": "À propos",
+    "para1": "Passionné de photographie depuis plus de 10 ans, je capture vos moments les plus précieux avec un œil artistique et une approche professionnelle.",
+    "stats": {
+      "clients": "500",
+      "clientsLabel": "Clients",
+      "mariages": "100", 
+      "mariagesLabel": "Mariages",
+      "experience": "10",
+      "experienceLabel": "Années"
+    }
+  },
+  "services": {
+    "portrait": {
+      "description": "Séances photo portrait en studio ou extérieur",
+      "price": "À partir de 150€"
+    },
+    "mariage": {
+      "description": "Couverture complète de votre jour J",
+      "price": "À partir de 800€"
+    },
+    "evenement": {
+      "description": "Reportage photo pour tous vos événements", 
+      "price": "À partir de 300€"
+    }
+  },
+  "contact": {
+    "email": "photo@exemple.com",
+    "phone": "+33 1 23 45 67 89",
+    "address": "Paris, France",
+    "whatsapp": "33123456789"
+  },
+  "photos": []
+}
