@@ -27,6 +27,10 @@ function checkAdminAccess() {
 // Initialisation
 document.addEventListener('DOMContentLoaded', async function() {
     if (!checkAdminAccess()) return;
+    
+    // Charger depuis URL si disponible
+    urlSync.loadFromURL();
+    
     await portfolioDB.init();
     initializeAdmin();
     loadStoredData();
