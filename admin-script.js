@@ -572,6 +572,28 @@ function loadStoredData() {
     }
 }
 
+// Export vers JSON pour synchronisation
+function exportToJSON() {
+    const data = {
+        hero: JSON.parse(localStorage.getItem('portfolioHero')) || {},
+        about: JSON.parse(localStorage.getItem('portfolioAbout')) || {},
+        services: JSON.parse(localStorage.getItem('portfolioServices')) || {},
+        contact: JSON.parse(localStorage.getItem('portfolioContact')) || {},
+        photos: photos
+    };
+    
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showNotification('Fichier data.json téléchargé ! Remplacez le fichier sur votre serveur.');
+}
+
 // Export/Import des données
 function exportData() {
     const data = {

@@ -373,11 +373,82 @@ function loadStoredContent() {
     }
 }
 
-// Charger les données stockées au démarrage
+// Charger les données depuis JSON et localStorage
+async function loadDataFromJSON() {
+    try {
+        const response = await fetch('./data.json');
+        const data = await response.json();
+        
+        // Appliquer les données JSON
+        if (data.hero) {
+            const heroTitle = document.querySelector('.hero-content h1');
+            const heroSubtitle = document.querySelector('.hero-content p');
+            const ctaBtn = document.querySelector('.cta-btn');
+            
+            if (heroTitle && data.hero.title) heroTitle.textContent = data.hero.title;
+            if (heroSubtitle && data.hero.subtitle) heroSubtitle.textContent = data.hero.subtitle;
+            if (ctaBtn && data.hero.buttonText) ctaBtn.textContent = data.hero.buttonText;
+        }
+        
+        if (data.about) {
+            const aboutTitle = document.querySelector('.about h2');
+            const aboutText = document.querySelector('.about-text p');
+            const stats = document.querySelectorAll('.stat .number');
+            const statLabels = document.querySelectorAll('.stat .label');
+            
+            if (aboutTitle && data.about.sectionTitle) aboutTitle.textContent = data.about.sectionTitle;
+            if (aboutText && data.about.para1) aboutText.textContent = data.about.para1;
+            
+            if (data.about.stats) {
+                if (stats[0] && data.about.stats.clients) stats[0].textContent = data.about.stats.clients + '+';
+                if (stats[1] && data.about.stats.mariages) stats[1].textContent = data.about.stats.mariages + '+';
+                if (stats[2] && data.about.stats.experience) stats[2].textContent = data.about.stats.experience;
+                
+                if (statLabels[0] && data.about.stats.clientsLabel) statLabels[0].textContent = data.about.stats.clientsLabel;
+                if (statLabels[1] && data.about.stats.mariagesLabel) statLabels[1].textContent = data.about.stats.mariagesLabel;
+                if (statLabels[2] && data.about.stats.experienceLabel) statLabels[2].textContent = data.about.stats.experienceLabel;
+            }
+        }
+        
+        if (data.services) {
+            const serviceCards = document.querySelectorAll('.service-card');
+            
+            if (data.services.portrait && serviceCards[0]) {
+                serviceCards[0].querySelector('p').textContent = data.services.portrait.description;
+                serviceCards[0].querySelector('.price').textContent = data.services.portrait.price;
+            }
+            
+            if (data.services.mariage && serviceCards[1]) {
+                serviceCards[1].querySelector('p').textContent = data.services.mariage.description;
+                serviceCards[1].querySelector('.price').textContent = data.services.mariage.price;
+            }
+            
+            if (data.services.evenement && serviceCards[2]) {
+                serviceCards[2].querySelector('p').textContent = data.services.evenement.description;
+                serviceCards[2].querySelector('.price').textContent = data.services.evenement.price;
+            }
+        }
+        
+        if (data.contact) {
+            const contactItems = document.querySelectorAll('.contact-item span');
+            
+            if (contactItems[0] && data.contact.email) contactItems[0].textContent = data.contact.email;
+            if (contactItems[1] && data.contact.phone) contactItems[1].textContent = data.contact.phone;
+            if (contactItems[2] && data.contact.address) contactItems[2].textContent = data.contact.address;
+        }
+        
+        console.log('Données JSON chargées');
+    } catch (error) {
+        console.log('Pas de fichier JSON, utilisation des données par défaut');
+    }
+}
+
+// Charger les données au démarrage
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
-        loadStoredImages();
-        loadAboutFromIndexedDB();
+        loadDataFromJSON(); // Charger JSON en premier
+        loadStoredImages(); // Puis localStorage
+        loadAboutFromIndexedDB(); // Puis IndexedDB
     }, 100);
 });
 
